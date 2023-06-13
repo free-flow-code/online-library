@@ -23,5 +23,6 @@ def main():
         filename = f'id{i}.txt'
         save_book(book, filename)
 
+
 if __name__ == '__main__':
     main()
