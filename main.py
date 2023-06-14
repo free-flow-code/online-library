@@ -11,7 +11,7 @@ def check_for_redirect(response):
         raise requests.exceptions.HTTPError
 
 
-def get_book_details(url):
+def parse_book_page(url):
     response = requests.get(url)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
@@ -34,7 +34,12 @@ def get_book_details(url):
         for genre in genres_soup:
             genres.append(genre.text)
 
-    return book_title, image_url, comments, genres
+    return {
+        'book_title': book_title,
+        'image_url': image_url,
+        'comments': comments,
+        'genres': genres
+    }
 
 
 def download_txt(response, filename, folder='books/'):
@@ -66,13 +71,13 @@ def main():
         response.raise_for_status()
         try:
             check_for_redirect(response)
-            book_title, image_url, comments, genres = get_book_details(page_url)
-            filename = f'{i}. ' + book_title + '.txt'
-            # print(book_title)
+            page_details = parse_book_page(page_url)
+            filename = f'{i}. ' + page_details['book_title'] + '.txt'
+            # print(page_details['book_title'])
             # download_txt(response, filename)
-            # download_image(image_url)
-            # print(comments)
-            print(genres)
+            # download_image(page_details['image_url'])
+            # print(page_details['comments'])
+            print(page_details['genres'])
         except requests.exceptions.HTTPError:
             pass
 
