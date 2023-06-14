@@ -86,11 +86,11 @@ def main():
             check_for_redirect(response)
             page_details = parse_book_page(page_url)
             filename = f'{i}. ' + page_details['book_title'] + '.txt'
-            # print(page_details['book_title'])
-            # download_txt(response, filename)
-            # download_image(page_details['image_url'])
-            # print(page_details['comments'])
-            print(page_details['genres'])
+            print('Заголовок: ', page_details['book_title'])
+            download_txt(response, filename)
+            download_image(page_details['image_url'])
+            print('Жанры: ', page_details['genres'])
+            print('Комментарии:\n', page_details['comments'], end='\n')
         except requests.exceptions.HTTPError:
             pass
 
