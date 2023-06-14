@@ -16,9 +16,8 @@ def get_book_details(url):
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
 
-    book_header_content = soup.find('body').find('table').find('h1')
-    book_header_text = book_header_content.text
-    book_title = book_header_text.split('::')[0].strip()
+    book_header = soup.find('body').find('table').find('h1').text
+    book_title = book_header.split('::')[0].strip()
 
     image_src = soup.select_one('div.bookimage img')['src']
     image_url = urljoin(url, image_src)
@@ -28,8 +27,14 @@ def get_book_details(url):
     if comments_soup:
         for comment in comments_soup:
             comments.append(comment.find(class_='black').text)
-    
-    return book_title, image_url, comments
+
+    genres_soup = soup.find('span', class_='d_book').find_all('a')
+    genres = []
+    if genres_soup:
+        for genre in genres_soup:
+            genres.append(genre.text)
+
+    return book_title, image_url, comments, genres
 
 
 def download_txt(response, filename, folder='books/'):
@@ -61,11 +66,13 @@ def main():
         response.raise_for_status()
         try:
             check_for_redirect(response)
-            book_title, image_url, comments = get_book_details(page_url)
+            book_title, image_url, comments, genres = get_book_details(page_url)
             filename = f'{i}. ' + book_title + '.txt'
+            # print(book_title)
             # download_txt(response, filename)
             # download_image(image_url)
-            print(comments)
+            # print(comments)
+            print(genres)
         except requests.exceptions.HTTPError:
             pass
 
