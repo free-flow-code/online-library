@@ -1,9 +1,19 @@
 import os
 import requests
+import argparse
 from pathlib import Path
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 from urllib.parse import urljoin, urlsplit
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='Скрипт для скачивания книг с tululu.org'
+    )
+    parser.add_argument('start_id', help='id первой книги', type=int, nargs='?', default=0)
+    parser.add_argument('stop_id', help='id последней книги', type=int, nargs='?', default=10)
+    return parser.parse_args()
 
 
 def check_for_redirect(response):
@@ -64,7 +74,10 @@ def main():
     Path('images').mkdir(parents=True, exist_ok=True)
     book_text_url_template = 'https://tululu.org/txt.php?id='
     book_page_url_template = 'https://tululu.org/b'
-    for i in range(1, 11):
+    args = parse_arguments()
+    start_book_id = args.start_id
+    stop_book_id = args.stop_id + 1
+    for i in range(start_book_id, stop_book_id):
         text_url = book_text_url_template + str(i)
         page_url = book_page_url_template + str(i)
         response = requests.get(text_url)
