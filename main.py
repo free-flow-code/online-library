@@ -15,12 +15,21 @@ def get_book_details(url):
     response = requests.get(url)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
+
     book_header_content = soup.find('body').find('table').find('h1')
     book_header_text = book_header_content.text
     book_title = book_header_text.split('::')[0].strip()
+
     image_src = soup.select_one('div.bookimage img')['src']
     image_url = urljoin(url, image_src)
-    return book_title, image_url
+
+    comments_soup = soup.find_all(class_='texts')
+    comments = []
+    if comments_soup:
+        for comment in comments_soup:
+            comments.append(comment.find(class_='black').text)
+    
+    return book_title, image_url, comments
 
 
 def download_txt(response, filename, folder='books/'):
@@ -52,10 +61,11 @@ def main():
         response.raise_for_status()
         try:
             check_for_redirect(response)
-            book_title, image_url = get_book_details(page_url)
+            book_title, image_url, comments = get_book_details(page_url)
             filename = f'{i}. ' + book_title + '.txt'
             # download_txt(response, filename)
-            download_image(image_url)
+            # download_image(image_url)
+            print(comments)
         except requests.exceptions.HTTPError:
             pass
 
