@@ -72,21 +72,24 @@ def download_image(url):
 def main():
     Path('books').mkdir(parents=True, exist_ok=True)
     Path('images').mkdir(parents=True, exist_ok=True)
+
     book_text_url = 'https://tululu.org/txt.php'
     book_text_url_params = {'id': ''}
     book_page_url_template = 'https://tululu.org/b'
+
     args = parse_arguments()
     start_book_id = args.start_id
     stop_book_id = args.stop_id + 1
-    for i in range(start_book_id, stop_book_id):
-        book_text_url_params['id'] = str(i)
-        page_url = book_page_url_template + str(i)
+
+    for book_id in range(start_book_id, stop_book_id):
+        book_text_url_params['id'] = str(book_id)
+        page_url = book_page_url_template + str(book_id)
         response = requests.get(book_text_url, params=book_text_url_params)
         response.raise_for_status()
         try:
             check_for_redirect(response)
             page_details = parse_book_page(page_url)
-            filename = f'{i}. ' + page_details['book_title'] + '.txt'
+            filename = f'{book_id}. ' + page_details['book_title'] + '.txt'
             print('Заголовок: ', page_details['book_title'])
             download_txt(response, filename)
             download_image(page_details['image_url'])
