@@ -72,15 +72,16 @@ def download_image(url):
 def main():
     Path('books').mkdir(parents=True, exist_ok=True)
     Path('images').mkdir(parents=True, exist_ok=True)
-    book_text_url_template = 'https://tululu.org/txt.php?id='
+    book_text_url = 'https://tululu.org/txt.php'
+    book_text_url_params = {'id': ''}
     book_page_url_template = 'https://tululu.org/b'
     args = parse_arguments()
     start_book_id = args.start_id
     stop_book_id = args.stop_id + 1
     for i in range(start_book_id, stop_book_id):
-        text_url = book_text_url_template + str(i)
+        book_text_url_params['id'] = str(i)
         page_url = book_page_url_template + str(i)
-        response = requests.get(text_url)
+        response = requests.get(book_text_url, params=book_text_url_params)
         response.raise_for_status()
         try:
             check_for_redirect(response)
