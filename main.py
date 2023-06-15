@@ -95,7 +95,8 @@ def main():
             download_image(page_details['image_url'])
             print('Жанры: ', page_details['genres'])
             print('Комментарии:\n', page_details['comments'], end='\n')
-        except requests.exceptions.HTTPError:
+        except requests.exceptions.HTTPError as err:
+            print(err)
             pass
 
 
