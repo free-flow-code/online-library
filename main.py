@@ -92,6 +92,7 @@ def main():
 
                 page_response = requests.get(page_url)
                 page_response.raise_for_status()
+                check_for_redirect(page_response)
                 page_details = parse_book_page(page_response)
 
                 filename = f'{book_id}. {page_details["book_title"]}.txt'
