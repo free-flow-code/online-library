@@ -83,13 +83,13 @@ def main():
 
     for book_id in range(start_book_id, stop_book_id):
         book_text_url_params['id'] = str(book_id)
-        page_url = book_page_url_template + str(book_id)
+        page_url = f'{book_page_url_template}{str(book_id)}'
         response = requests.get(book_text_url, params=book_text_url_params)
         response.raise_for_status()
         try:
             check_for_redirect(response)
             page_details = parse_book_page(page_url)
-            filename = f'{book_id}. ' + page_details['book_title'] + '.txt'
+            filename = f'{book_id}. {page_details["book_title"]}.txt'
             print('Заголовок: ', page_details['book_title'])
             download_txt(response, filename)
             download_image(page_details['image_url'])
