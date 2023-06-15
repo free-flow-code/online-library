@@ -86,6 +86,7 @@ def main():
         book_text_url_params['id'] = str(book_id)
         page_url = f'{book_page_url_template}{str(book_id)}'
         while True:
+            try_connection = 0
             try:
                 response = requests.get(book_text_url, params=book_text_url_params)
                 response.raise_for_status()
@@ -102,7 +103,11 @@ def main():
                 pass
             except requests.exceptions.ConnectionError as err:
                 print(err)
-                time.sleep(5)
+                if try_connection == 0:
+                    time.sleep(3)
+                else:
+                    time.sleep(5)
+                try_connection += 1
                 continue
             break
 
