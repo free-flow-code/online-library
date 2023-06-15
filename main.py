@@ -32,16 +32,10 @@ def parse_book_page(response):
     image_url = urljoin(response.url, image_src)
 
     comments_soup = soup.find_all(class_='texts')
-    comments = []
-    if comments_soup:
-        for comment in comments_soup:
-            comments.append(comment.find(class_='black').text)
+    comments = [comment.find(class_='black').text for comment in comments_soup]
 
     genres_soup = soup.find('span', class_='d_book').find_all('a')
-    genres = []
-    if genres_soup:
-        for genre in genres_soup:
-            genres.append(genre.text)
+    genres = [genre.text for genre in genres_soup]
 
     return {
         'book_title': book_title,
