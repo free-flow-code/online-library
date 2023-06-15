@@ -22,16 +22,14 @@ def check_for_redirect(response):
         raise requests.exceptions.HTTPError
 
 
-def parse_book_page(url):
-    response = requests.get(url)
-    response.raise_for_status()
+def parse_book_page(response):
     soup = BeautifulSoup(response.text, 'lxml')
 
     book_header = soup.find('body').find('table').find('h1').text
     book_title = book_header.split('::')[0].strip()
 
     image_src = soup.select_one('div.bookimage img')['src']
-    image_url = urljoin(url, image_src)
+    image_url = urljoin(response.url, image_src)
 
     comments_soup = soup.find_all(class_='texts')
     comments = []
@@ -88,13 +86,18 @@ def main():
         while True:
             try_connection = 0
             try:
-                response = requests.get(book_text_url, params=book_text_url_params)
-                response.raise_for_status()
-                check_for_redirect(response)
-                page_details = parse_book_page(page_url)
+                file_response = requests.get(book_text_url, params=book_text_url_params)
+                file_response.raise_for_status()
+                check_for_redirect(file_response)
+
+                page_response = requests.get(page_url)
+                page_response.raise_for_status()
+                page_details = parse_book_page(page_response)
+
                 filename = f'{book_id}. {page_details["book_title"]}.txt'
-                download_txt(response, filename)
+                download_txt(file_response, filename)
                 download_image(page_details['image_url'])
+
                 print('Заголовок: ', page_details['book_title'])
                 print('Жанры: ', page_details['genres'])
                 print('Комментарии:\n', page_details['comments'], end='\n')
