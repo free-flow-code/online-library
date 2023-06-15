@@ -1,4 +1,5 @@
 import os
+import time
 import requests
 import argparse
 from pathlib import Path
@@ -11,7 +12,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description='Скрипт для скачивания книг с tululu.org'
     )
-    parser.add_argument('start_id', help='id первой книги', type=int, nargs='?', default=0)
+    parser.add_argument('start_id', help='id первой книги', type=int, nargs='?', default=1)
     parser.add_argument('stop_id', help='id последней книги', type=int, nargs='?', default=10)
     return parser.parse_args()
 
@@ -84,20 +85,26 @@ def main():
     for book_id in range(start_book_id, stop_book_id):
         book_text_url_params['id'] = str(book_id)
         page_url = f'{book_page_url_template}{str(book_id)}'
-        response = requests.get(book_text_url, params=book_text_url_params)
-        response.raise_for_status()
-        try:
-            check_for_redirect(response)
-            page_details = parse_book_page(page_url)
-            filename = f'{book_id}. {page_details["book_title"]}.txt'
-            print('Заголовок: ', page_details['book_title'])
-            download_txt(response, filename)
-            download_image(page_details['image_url'])
-            print('Жанры: ', page_details['genres'])
-            print('Комментарии:\n', page_details['comments'], end='\n')
-        except requests.exceptions.HTTPError as err:
-            print(err)
-            pass
+        while True:
+            try:
+                response = requests.get(book_text_url, params=book_text_url_params)
+                response.raise_for_status()
+                check_for_redirect(response)
+                page_details = parse_book_page(page_url)
+                filename = f'{book_id}. {page_details["book_title"]}.txt'
+                download_txt(response, filename)
+                download_image(page_details['image_url'])
+                print('Заголовок: ', page_details['book_title'])
+                print('Жанры: ', page_details['genres'])
+                print('Комментарии:\n', page_details['comments'], end='\n')
+            except requests.exceptions.HTTPError as err:
+                print(err)
+                pass
+            except requests.exceptions.ConnectionError as err:
+                print(err)
+                time.sleep(5)
+                continue
+            break
 
 
 if __name__ == '__main__':
