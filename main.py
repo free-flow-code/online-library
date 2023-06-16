@@ -98,7 +98,6 @@ def main():
                 print('Комментарии:\n', page_details['comments'], end='\n')
             except requests.exceptions.HTTPError as err:
                 print(err)
-                pass
             except requests.exceptions.ConnectionError as err:
                 print(err)
                 if try_connection == 0:
