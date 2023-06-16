@@ -100,7 +100,7 @@ def main():
                 print(err)
             except requests.exceptions.ConnectionError as err:
                 print(err)
-                if try_connection == 0:
+                if not try_connection:
                     time.sleep(3)
                 else:
                     time.sleep(5)
