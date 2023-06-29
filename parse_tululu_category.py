@@ -2,10 +2,20 @@ import os
 import json
 import time
 import requests
+import argparse
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 from bs4 import BeautifulSoup
 from parse_tululu_books import check_for_redirect, parse_book_page, download_txt, download_image
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        description='Скрипт для скачивания книг из категории "Научная фантастика" с tululu.org'
+    )
+    parser.add_argument('--start_page', help='номер стартовой страницы', type=int, nargs='?', default=1)
+    parser.add_argument('--end_page', help='номер конечной страницы', type=int, nargs='?', default=0)
+    return parser.parse_args()
 
 
 def get_page_books(url_template, response):
@@ -24,15 +34,25 @@ def main():
     book_text_url = 'https://tululu.org/txt.php'
     book_text_url_params = {'id': ''}
 
+    args = parse_arguments()
+    start_page = args.start_page
+    end_page = args.end_page
+    print(start_page, end_page)
+
     category_page_response = requests.get(urljoin(url_template, category))
     category_page_response.raise_for_status()
+    books_url = []
 
-    # soup = BeautifulSoup(category_page_response.text, 'lxml')
-    # max_category_page = int(soup.find_all(class_='npage')[-1].text)
-    books_url = get_page_books(url_template, category_page_response)
+    if not end_page:
+        soup = BeautifulSoup(category_page_response.text, 'lxml')
+        max_category_page = int(soup.find_all(class_='npage')[-1].text)
+        end_page = max_category_page
 
-    for page in range(2, 5):
-        page_response = requests.get(urljoin(url_template, category + str(page)))
+    for page in range(start_page, end_page):
+        if page == 1:
+            page_response = requests.get(urljoin(url_template, category))
+        else:
+            page_response = requests.get(urljoin(url_template, category + str(page)))
         page_response.raise_for_status()
         books_url += get_page_books(url_template, page_response)
 
@@ -60,7 +80,7 @@ def main():
                 with open('books_data.json', 'a', encoding='utf-8') as file:
                     json.dump(page_details, file, ensure_ascii=False)
 
-                print(page_details)
+                print(book_url)
             except requests.exceptions.HTTPError as err:
                 print(err)
             except requests.exceptions.ConnectionError as err:
