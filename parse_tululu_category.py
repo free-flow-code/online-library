@@ -57,8 +57,8 @@ def main():
 
                 page_details['image_url'] = os.path.join('images', page_details['image_url'].split('/')[-1])
                 page_details['book_path'] = os.path.join('books', filename)
-                with open('books_data.json', 'w', encoding='utf8') as file:
-                    json.dump(page_details, file)
+                with open('books_data.json', 'a', encoding='utf-8') as file:
+                    json.dump(page_details, file, ensure_ascii=False)
 
                 print(page_details)
             except requests.exceptions.HTTPError as err:
