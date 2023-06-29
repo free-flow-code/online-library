@@ -28,6 +28,8 @@ def parse_book_page(response):
     book_header = soup.find('body').find('table').find('h1').text
     book_title = book_header.split('::')[0].strip()
 
+    author = book_header.split('::')[1].strip()
+
     image_src = soup.select_one('div.bookimage img')['src']
     image_url = urljoin(response.url, image_src)
 
@@ -39,6 +41,7 @@ def parse_book_page(response):
 
     return {
         'book_title': book_title,
+        'author': author,
         'image_url': image_url,
         'comments': comments,
         'genres': genres
