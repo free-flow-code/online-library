@@ -54,14 +54,26 @@ def main():
         Path('images').mkdir(parents=True, exist_ok=True)
 
     for page in range(start_page, end_page):
-        page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
-        page_response.raise_for_status()
-        try:
-            check_for_redirect(page_response)
-        except requests.exceptions.HTTPError as err:
-            print(err)
-            pass
-        book_urls += get_page_books(url_template, page_response)
+        try_connection = 0
+        print(page)
+        while True:
+            page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
+            page_response.raise_for_status()
+            try:
+                check_for_redirect(page_response)
+            except requests.exceptions.HTTPError as err:
+                print(err)
+                pass
+            except requests.exceptions.ConnectionError as err:
+                print(err)
+                if not try_connection:
+                    time.sleep(3)
+                else:
+                    time.sleep(5)
+                try_connection += 1
+                continue
+            book_urls += get_page_books(url_template, page_response)
+            break
 
     for book_url in book_urls:
         book_id = str(urlsplit(book_url).path.split('/')[-2]).replace('b', '')
