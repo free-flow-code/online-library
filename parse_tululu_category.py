@@ -24,8 +24,8 @@ def parse_arguments():
 def get_page_books(url_template, response):
     soup = BeautifulSoup(response.text, 'lxml')
     all_books = soup.find_all(class_='d_book')
-    books_url = [urljoin(url_template, book.find('a')['href']) for book in all_books]
-    return books_url
+    book_urls = [urljoin(url_template, book.find('a')['href']) for book in all_books]
+    return book_urls
 
 
 def main():
@@ -43,7 +43,7 @@ def main():
 
     category_page_response = requests.get(urljoin(url_template, category))
     category_page_response.raise_for_status()
-    books_url = []
+    book_urls = []
 
     if not end_page:
         soup = BeautifulSoup(category_page_response.text, 'lxml')
@@ -64,9 +64,9 @@ def main():
         else:
             page_response = requests.get(urljoin(url_template, category + str(page)))
         page_response.raise_for_status()
-        books_url += get_page_books(url_template, page_response)
+        book_urls += get_page_books(url_template, page_response)
 
-    for book_url in books_url:
+    for book_url in book_urls:
         book_id = str(urlsplit(book_url).path.split('/')[-2]).replace('b', '')
         book_text_url_params['id'] = book_id
         while True:
