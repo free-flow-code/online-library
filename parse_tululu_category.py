@@ -101,7 +101,6 @@ def main():
 
                 books_details.append(page_details)
 
-                print(book_url)
             except requests.exceptions.HTTPError as err:
                 print(err)
             except requests.exceptions.ConnectionError as err:
