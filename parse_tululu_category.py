@@ -54,10 +54,7 @@ def main():
         Path('images').mkdir(parents=True, exist_ok=True)
 
     for page in range(start_page, end_page):
-        if page == 1:
-            page_response = requests.get(urljoin(url_template, category))
-        else:
-            page_response = requests.get(urljoin(url_template, category + str(page)))
+        page_response = requests.get(urljoin(url_template, category + str(page)))
         page_response.raise_for_status()
         book_urls += get_page_books(url_template, page_response)
 
