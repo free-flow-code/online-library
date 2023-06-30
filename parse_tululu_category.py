@@ -55,7 +55,6 @@ def main():
 
     for page in range(start_page, end_page):
         try_connection = 0
-        print(page)
         while True:
             page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
             page_response.raise_for_status()
@@ -92,13 +91,12 @@ def main():
 
                 if not skip_txt:
                     filename = f'{book_id}. {page_details["book_title"]}.txt'
-                    download_txt(file_response, filename)
-                    page_details['book_path'] = os.path.join('books', filename)
+                    book_path = download_txt(file_response, filename)
+                    page_details['book_path'] = book_path
 
                 if not skip_imgs:
-                    download_image(page_details['image_url'])
-                    page_details['image_url'] = os.path.join('images', page_details['image_url'].split('/')[-1])
-                del page_details['image_url']
+                    image_path = download_image(page_details['image_url'])
+                    page_details['image_url'] = image_path
 
                 with open(os.path.join(dest_folder, 'books_data.json'), 'a', encoding='utf-8') as file:
                     json.dump(page_details, file, ensure_ascii=False)

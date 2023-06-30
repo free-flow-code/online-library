@@ -55,6 +55,8 @@ def download_txt(response, filename, folder='books/'):
     with open(filepath, 'wb') as file:
         file.write(book_text)
 
+    return filepath
+
 
 def download_image(url):
     response = requests.get(url)
@@ -63,6 +65,8 @@ def download_image(url):
     filepath = os.path.join('images', filename)
     with open(filepath, 'wb') as file:
         file.write(response.content)
+
+    return filepath
 
 
 def main():
