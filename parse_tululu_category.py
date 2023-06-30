@@ -14,7 +14,7 @@ def parse_arguments():
         description='Скрипт для скачивания книг из категории "Научная фантастика" с tululu.org'
     )
     parser.add_argument('--start_page', help='номер стартовой страницы', type=int, nargs='?', default=1)
-    parser.add_argument('--end_page', help='номер конечной страницы', type=int, nargs='?', default=0)
+    parser.add_argument('--end_page', help='номер конечной страницы', type=int, nargs='?', default=701)
     parser.add_argument('--dest_folder', help='путь к каталогу с результатами парсинга', type=str, nargs='?', default=0)
     parser.add_argument('--skip_imgs', help='не скачивать картинки', action='store_true')
     parser.add_argument('--skip_txt', help='не скачивать книги', action='store_true')
@@ -44,11 +44,6 @@ def main():
     category_page_response = requests.get(urljoin(url_template, category))
     category_page_response.raise_for_status()
     book_urls = []
-
-    if not end_page:
-        soup = BeautifulSoup(category_page_response.text, 'lxml')
-        max_category_page = int(soup.find_all(class_='npage')[-1].text)
-        end_page = max_category_page
 
     if dest_folder:
         Path(os.path.join(dest_folder, 'books')).mkdir(parents=True, exist_ok=True)
