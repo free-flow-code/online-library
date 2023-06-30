@@ -74,6 +74,7 @@ def main():
             book_urls += get_page_books(url_template, page_response)
             break
 
+    books_details = []
     for book_url in book_urls:
         book_id = str(urlsplit(book_url).path.split('/')[-2]).replace('b', '')
         book_text_url_params['id'] = book_id
@@ -98,8 +99,7 @@ def main():
                     image_path = download_image(page_details['image_url'])
                     page_details['image_url'] = image_path
 
-                with open(os.path.join(dest_folder, 'books_data.json'), 'a', encoding='utf-8') as file:
-                    json.dump(page_details, file, ensure_ascii=False)
+                books_details.append(page_details)
 
                 print(book_url)
             except requests.exceptions.HTTPError as err:
@@ -113,6 +113,9 @@ def main():
                 try_connection += 1
                 continue
             break
+
+    with open(os.path.join(dest_folder, 'books_data.json'), 'a', encoding='utf-8') as file:
+        json.dump(books_details, file, ensure_ascii=False)
 
 
 if __name__ == '__main__':
