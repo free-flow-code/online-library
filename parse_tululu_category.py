@@ -56,6 +56,11 @@ def main():
     for page in range(start_page, end_page):
         page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
         page_response.raise_for_status()
+        try:
+            check_for_redirect(page_response)
+        except requests.exceptions.HTTPError as err:
+            print(err)
+            pass
         book_urls += get_page_books(url_template, page_response)
 
     for book_url in book_urls:
