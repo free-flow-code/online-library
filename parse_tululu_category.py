@@ -15,7 +15,7 @@ def parse_arguments():
     )
     parser.add_argument('--start_page', help='номер стартовой страницы', type=int, nargs='?', default=1)
     parser.add_argument('--end_page', help='номер конечной страницы', type=int, nargs='?', default=701)
-    parser.add_argument('--dest_folder', help='путь к каталогу с результатами парсинга', type=str, nargs='?', default=0)
+    parser.add_argument('--dest_folder', help='путь к каталогу с результатами парсинга', type=str, nargs='?', default='.')
     parser.add_argument('--skip_imgs', help='не скачивать картинки', action='store_true')
     parser.add_argument('--skip_txt', help='не скачивать книги', action='store_true')
     return parser.parse_args()
@@ -42,14 +42,10 @@ def main():
     skip_txt = args.skip_txt
 
     book_urls = []
-
-    if dest_folder:
-        Path(os.path.join(dest_folder, 'books')).mkdir(parents=True, exist_ok=True)
-        Path(os.path.join(dest_folder, 'images')).mkdir(parents=True, exist_ok=True)
-    else:
-        dest_folder = '.'
-        Path('books').mkdir(parents=True, exist_ok=True)
-        Path('images').mkdir(parents=True, exist_ok=True)
+    savepath_txt = os.path.join(dest_folder, 'books')
+    savepath_img = os.path.join(dest_folder, 'images')
+    Path(savepath_txt).mkdir(parents=True, exist_ok=True)
+    Path(savepath_img).mkdir(parents=True, exist_ok=True)
 
     for page in range(start_page, end_page):
         try_connection = 0
@@ -90,11 +86,11 @@ def main():
 
                 if not skip_txt:
                     filename = f'{book_id}. {page_details["book_title"]}.txt'
-                    book_path = download_txt(file_response, filename)
+                    book_path = download_txt(file_response, filename, folder=savepath_txt)
                     page_details['book_path'] = book_path
 
                 if not skip_imgs:
-                    image_path = download_image(page_details['image_url'])
+                    image_path = download_image(page_details['image_url'], folder=savepath_img)
                     page_details['image_url'] = image_path
 
                 books_details.append(page_details)

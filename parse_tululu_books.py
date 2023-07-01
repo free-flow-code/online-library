@@ -58,11 +58,11 @@ def download_txt(response, filename, folder='books/'):
     return filepath
 
 
-def download_image(url):
+def download_image(url, folder='images/'):
     response = requests.get(url)
     response.raise_for_status()
     filename = urlsplit(url).path.split('/')[-1]
-    filepath = os.path.join('images', filename)
+    filepath = os.path.join(folder, filename)
     with open(filepath, 'wb') as file:
         file.write(response.content)
 
