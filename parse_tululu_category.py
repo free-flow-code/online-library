@@ -56,7 +56,6 @@ def main():
                 check_for_redirect(page_response)
             except requests.exceptions.HTTPError as err:
                 print(err)
-                pass
             except requests.exceptions.ConnectionError as err:
                 print(err)
                 if not try_connection:
