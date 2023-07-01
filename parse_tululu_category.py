@@ -41,8 +41,6 @@ def main():
     skip_imgs = args.skip_imgs
     skip_txt = args.skip_txt
 
-    category_page_response = requests.get(urljoin(url_template, category))
-    category_page_response.raise_for_status()
     book_urls = []
 
     if dest_folder:
