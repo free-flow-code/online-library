@@ -50,9 +50,9 @@ def main():
     for page in range(start_page, end_page):
         try_connection = 0
         while True:
-            page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
-            page_response.raise_for_status()
             try:
+                page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
+                page_response.raise_for_status()
                 check_for_redirect(page_response)
             except requests.exceptions.HTTPError as err:
                 print(err)
