@@ -54,8 +54,11 @@ def main():
                 page_response = requests.get(urljoin(url_template, f'{category}{str(page)}'))
                 page_response.raise_for_status()
                 check_for_redirect(page_response)
+                book_urls += get_page_books(url_template, page_response)
             except requests.exceptions.HTTPError as err:
                 print(err)
+                page += 1
+                continue
             except requests.exceptions.ConnectionError as err:
                 print(err)
                 if not try_connection:
@@ -64,7 +67,6 @@ def main():
                     time.sleep(5)
                 try_connection += 1
                 continue
-            book_urls += get_page_books(url_template, page_response)
             break
 
     books_details = []
