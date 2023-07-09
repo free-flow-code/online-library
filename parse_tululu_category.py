@@ -86,13 +86,13 @@ def main():
                 page_details = parse_book_page(page_response)
 
                 if not skip_txt:
-                    filename = f'{book_id}. {page_details["book_title"]}.txt'
+                    filename = f'{book_id}. {page_details["title"]}.txt'
                     book_path = download_txt(file_response, filename, folder=savepath_txt)
                     page_details['book_path'] = book_path
 
                 if not skip_imgs:
                     image_path = download_image(page_details['image_url'], folder=savepath_img)
-                    page_details['image_url'] = image_path
+                    page_details['image_src'] = image_path.replace('\\', '/')
 
                 books_details.append(page_details)
 

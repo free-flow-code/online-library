@@ -40,7 +40,7 @@ def parse_book_page(response):
     genres = [genre.text for genre in genres_soup]
 
     return {
-        'book_title': book_title,
+        'title': book_title,
         'author': author,
         'image_url': image_url,
         'comments': comments,
@@ -96,11 +96,11 @@ def main():
                 check_for_redirect(page_response)
                 page_details = parse_book_page(page_response)
 
-                filename = f'{book_id}. {page_details["book_title"]}.txt'
+                filename = f'{book_id}. {page_details["title"]}.txt'
                 download_txt(file_response, filename)
                 download_image(page_details['image_url'])
 
-                print('Заголовок: ', page_details['book_title'])
+                print('Заголовок: ', page_details['title'])
                 print('Жанры: ', page_details['genres'])
                 print('Комментарии:\n', page_details['comments'], end='\n')
             except requests.exceptions.HTTPError as err:
