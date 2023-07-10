@@ -1,5 +1,6 @@
 books/
 images/
+pages/
 *.json
 index.html
 # Byte-compiled / optimized / DLL files
