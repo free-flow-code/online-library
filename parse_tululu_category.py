@@ -15,7 +15,7 @@ def parse_arguments():
     )
     parser.add_argument('--start_page', help='номер стартовой страницы', type=int, nargs='?', default=1)
     parser.add_argument('--end_page', help='номер конечной страницы', type=int, nargs='?', default=701)
-    parser.add_argument('--dest_folder', help='путь к каталогу с результатами парсинга', type=str, nargs='?', default='.')
+    parser.add_argument('--dest_folder', help='путь к каталогу с результатами парсинга', type=str, nargs='?', default='')
     parser.add_argument('--skip_imgs', help='не скачивать картинки', action='store_true')
     parser.add_argument('--skip_txt', help='не скачивать книги', action='store_true')
     return parser.parse_args()

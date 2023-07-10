@@ -11,6 +11,15 @@
     <title>Online library</title>
   </head>
   <body>
+  <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+  </nav>
   {% for book in books %}
     <div class="container">
       <div class="row px-lg-n5">
@@ -18,14 +27,14 @@
           <div class="card mb-3" style="max-width: 540px;">
             <div class="row no-gutters">
               <div class="col-md-4">
-                <img src="{{book[0].image_src|urlencode}}" class="card-img" alt="{{book.title}}">
+                <img src="../{{book[0].image_src|urlencode}}" class="card-img" alt="{{book[0].title}}">
               </div>
               <div class="col-md-8">
                 <div class="card-body">
                   <h5 class="card-title">{{book[0].title}}</h5>
                   <p class="card-text">{{book[0].author}}</p>
                   <div>
-                    <a href="{{book[0].txt_src|urlencode}}" target="_blank">читать</a>
+                    <a href="../{{book[0].txt_src|urlencode}}" target="_blank">читать</a>
                   </div>
                   <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
@@ -38,14 +47,14 @@
             <div class="card mb-3" style="max-width: 540px;">
               <div class="row no-gutters">
                 <div class="col-md-4">
-                  <img src="{{book[1].image_src|urlencode}}" class="card-img" alt="{{book[1].title}}">
+                  <img src="../{{book[1].image_src|urlencode}}" class="card-img" alt="{{book[1].title}}">
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">
                     <h5 class="card-title">{{book[1].title}}</h5>
                     <p class="card-text">{{book[1].author}}</p>
                     <div>
-                      <a href="{{book[1].txt_src|urlencode}}" target="_blank">читать</a>
+                      <a href="../{{book[1].txt_src|urlencode}}" target="_blank">читать</a>
                     </div>
                     <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                   </div>
