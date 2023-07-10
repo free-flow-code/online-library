@@ -89,6 +89,7 @@ def main():
                     filename = f'{book_id}. {page_details["title"]}.txt'
                     book_path = download_txt(file_response, filename, folder=savepath_txt)
                     page_details['book_path'] = book_path
+                    page_details['txt_src'] = book_path.replace('\\', '/')
 
                 if not skip_imgs:
                     image_path = download_image(page_details['image_url'], folder=savepath_img)
