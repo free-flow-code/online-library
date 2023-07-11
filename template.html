@@ -12,32 +12,33 @@
   </head>
   <body>
   <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        {% if page_id - 1 in total_pages %}
-          <li class="page-item"><a class="page-link" href="./index{{page_id - 1}}.html">Назад</a></li>
-        {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true">Назад</a>
+    <ul class="pagination mx-auto pt-3" style="width: 200px">
+      {% if page_id - 1 in total_pages %}
+        <li class="page-item"><a class="page-link" href="./index{{page_id - 1}}.html">Назад</a></li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" tabindex="-1" aria-disabled="true">Назад</a>
+        </li>
+      {% endif %}
+      {% for page in total_pages %}
+        {% if page == page_id %}
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="./index{{page}}.html">{{page}} <span class="sr-only">(current)</span></a>
           </li>
-        {% endif %}
-        {% for page in total_pages %}
-          {% if page == page_id %}
-            <li class="page-item active" aria-current="page">
-              <a class="page-link" href="./index{{page}}.html">{{page}} <span class="sr-only">(current)</span></a>
-            </li>
-          {% else %}
-            <li class="page-item"><a class="page-link" href="./index{{page}}.html">{{page}}</a></li>
-          {% endif %}
-        {% endfor %}
-        {% if page_id + 1 in total_pages %}
-          <li class="page-item"><a class="page-link" href="./index{{page_id + 1}}.html">Вперед</a></li>
         {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true">Вперед</a>
-          </li>
+          <li class="page-item"><a class="page-link" href="./index{{page}}.html">{{page}}</a></li>
         {% endif %}
-      </ul>
+      {% endfor %}
+      {% if page_id + 1 in total_pages %}
+        <li class="page-item"><a class="page-link" href="./index{{page_id + 1}}.html">Вперед</a></li>
+      {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" tabindex="-1" aria-disabled="true">Вперед</a>
+        </li>
+      {% endif %}
+    </ul>
   </nav>
+  <hr/>
   {% for book in books %}
     <div class="container">
       <div class="row px-lg-n5">
@@ -51,6 +52,11 @@
                 <div class="card-body">
                   <h5 class="card-title">{{book[0].title}}</h5>
                   <p class="card-text">{{book[0].author}}</p>
+                  <div>
+                    {% for genre in book[0].genres %}
+                      <span class="badge badge-secondary">{{genre}}</span>
+                    {% endfor %}
+                  </div>
                   <div>
                     <a href="../{{book[0].txt_src|urlencode}}" target="_blank">читать</a>
                   </div>
@@ -71,6 +77,11 @@
                   <div class="card-body">
                     <h5 class="card-title">{{book[1].title}}</h5>
                     <p class="card-text">{{book[1].author}}</p>
+                    <div>
+                    {% for genre in book[1].genres %}
+                      <span class="badge badge-secondary">{{genre}}</span>
+                    {% endfor %}
+                    </div>
                     <div>
                       <a href="../{{book[1].txt_src|urlencode}}" target="_blank">читать</a>
                     </div>
