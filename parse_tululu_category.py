@@ -42,8 +42,8 @@ def main():
     skip_txt = args.skip_txt
 
     book_urls = []
-    savepath_txt = os.path.join(dest_folder, 'books')
-    savepath_img = os.path.join(dest_folder, 'images')
+    savepath_txt = os.path.join(dest_folder, 'media', 'books')
+    savepath_img = os.path.join(dest_folder, 'media', 'images')
     Path(savepath_txt).mkdir(parents=True, exist_ok=True)
     Path(savepath_img).mkdir(parents=True, exist_ok=True)
 
@@ -109,7 +109,7 @@ def main():
                 continue
             break
 
-    with open(os.path.join(dest_folder, 'books_data.json'), 'a', encoding='utf-8') as file:
+    with open(os.path.join(dest_folder, 'books_data.json'), 'w', encoding='utf-8') as file:
         json.dump(books_details, file, ensure_ascii=False)
 
 
