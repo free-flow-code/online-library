@@ -20,9 +20,10 @@ def on_reload(json_folder):
     )
 
     template = env.get_template('template.html')
+    books_in_row = 2
 
     with open(os.path.join(json_folder, 'books_data.json'), encoding="utf8") as json_file:
-        books = list(chunked(json.load(json_file), 2))
+        books = list(chunked(json.load(json_file), books_in_row))
 
     os.makedirs("pages", exist_ok=True)
     page = 1
