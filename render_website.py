@@ -1,12 +1,19 @@
 import os
 import json
 import math
+import argparse
 from livereload import Server
 from more_itertools import chunked
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def on_reload():
+def parse_arguments():
+    parser = argparse.ArgumentParser(description='Скрипт для запуска сайта онлайн-библиотеки.')
+    parser.add_argument('--json-folder', help='путь к файлу с данными книг', type=str, nargs='?', default='.')
+    return parser.parse_args()
+
+
+def on_reload(json_folder):
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -14,7 +21,7 @@ def on_reload():
 
     template = env.get_template('template.html')
 
-    with open('books_data.json', encoding="utf8") as json_file:
+    with open(os.path.join(json_folder, 'books_data.json'), encoding="utf8") as json_file:
         books = list(chunked(json.load(json_file), 2))
 
     os.makedirs("pages", exist_ok=True)
@@ -38,7 +45,9 @@ def on_reload():
 
 
 def main():
-    on_reload()
+    args = parse_arguments()
+    json_folder = args.json_folder
+    on_reload(json_folder)
     server = Server()
     server.watch('template.html', on_reload)
     server.serve(root='.', default_filename='pages/index1.html')
