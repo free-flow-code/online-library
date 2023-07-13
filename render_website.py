@@ -17,10 +17,10 @@ def on_reload():
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
     )
+    template = env.get_template('template.html')
 
     args = parse_arguments()
     json_folder = args.json_folder
-    template = env.get_template('template.html')
     books_per_page = 10
 
     with open(os.path.join(json_folder, 'books_data.json'), encoding='utf8') as json_file:
@@ -43,7 +43,7 @@ def main():
     on_reload()
     server = Server()
     server.watch('template.html', on_reload)
-    server.serve(root='.', default_filename='pages/index1.html')
+    server.serve(root='pages', default_filename='index1.html')
 
 
 if __name__ == '__main__':
