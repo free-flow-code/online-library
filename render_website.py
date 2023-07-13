@@ -1,6 +1,5 @@
 import os
 import json
-import math
 import argparse
 from livereload import Server
 from more_itertools import chunked
@@ -13,42 +12,35 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def on_reload(json_folder):
+def on_reload():
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
     )
-
+    
+    args = parse_arguments()
+    json_folder = args.json_folder
     template = env.get_template('template.html')
-    books_in_row = 2
+    books_per_page = 10
 
     with open(os.path.join(json_folder, 'books_data.json'), encoding="utf8") as json_file:
-        books = list(chunked(json.load(json_file), books_in_row))
+        books_in_page = list(chunked(json.load(json_file), books_per_page))
 
     os.makedirs("pages", exist_ok=True)
-    page = 1
-    books_per_page = 10
-    total_pages = [*range(1, math.ceil(len(books) / books_per_page) + 1)]
-    for index, value in enumerate(books):
-        if index and index % books_per_page == 0:
-            rendered_page = template.render(
-                books=books[index - books_per_page:index],
-                page_id=page,
-                total_pages=total_pages
-            )
-            del books[index - books_per_page:index]
-            with open(f'./pages/index{page}.html', 'w', encoding="utf8") as file:
-                file.write(rendered_page)
-            page += 1
-    rendered_page = template.render(books=books, page_id=page, total_pages=total_pages)
-    with open(f'./pages/index{page}.html', 'w', encoding="utf8") as file:
-        file.write(rendered_page)
+    books_per_row = 2
+    total_pages = [*range(1, len(books_in_page) + 1)]
+    for page_id, books in enumerate(books_in_page, start=1):
+        rendered_page = template.render(
+            books=list(chunked(books, books_per_row)),
+            page_id=page_id,
+            total_pages=total_pages
+        )
+        with open(f'./pages/index{page_id}.html', 'w', encoding="utf8") as file:
+            file.write(rendered_page)
 
 
 def main():
-    args = parse_arguments()
-    json_folder = args.json_folder
-    on_reload(json_folder)
+    on_reload()
     server = Server()
     server.watch('template.html', on_reload)
     server.serve(root='.', default_filename='pages/index1.html')
