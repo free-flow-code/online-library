@@ -17,16 +17,16 @@ def on_reload():
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
     )
-    
+
     args = parse_arguments()
     json_folder = args.json_folder
     template = env.get_template('template.html')
     books_per_page = 10
 
-    with open(os.path.join(json_folder, 'books_data.json'), encoding="utf8") as json_file:
+    with open(os.path.join(json_folder, 'books_data.json'), encoding='utf8') as json_file:
         books_in_page = list(chunked(json.load(json_file), books_per_page))
 
-    os.makedirs("pages", exist_ok=True)
+    os.makedirs('pages', exist_ok=True)
     books_per_row = 2
     total_pages = [*range(1, len(books_in_page) + 1)]
     for page_id, books in enumerate(books_in_page, start=1):
@@ -35,7 +35,7 @@ def on_reload():
             page_id=page_id,
             total_pages=total_pages
         )
-        with open(f'./pages/index{page_id}.html', 'w', encoding="utf8") as file:
+        with open(f'./pages/index{page_id}.html', 'w', encoding='utf8') as file:
             file.write(rendered_page)
 
 
