@@ -45,14 +45,10 @@
                 <div class="card-body">
                   <h5 class="card-title">{{book[0].title}}</h5>
                   <p class="card-text">{{book[0].author}}</p>
-                  <div>
                     {% for genre in book[0].genres %}
                       <span class="badge badge-secondary">{{genre}}</span>
                     {% endfor %}
-                  </div>
-                  <div>
-                    <a href="../{{book[0].txt_src|urlencode}}" target="_blank">читать</a>
-                  </div>
+                    <h5 class="card-text"><a href="../{{book[0].txt_src|urlencode}}" target="_blank">читать</a></h5>
                   <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                 </div>
               </div>
@@ -70,14 +66,10 @@
                   <div class="card-body">
                     <h5 class="card-title">{{book[1].title}}</h5>
                     <p class="card-text">{{book[1].author}}</p>
-                    <div>
                     {% for genre in book[1].genres %}
                       <span class="badge badge-secondary">{{genre}}</span>
                     {% endfor %}
-                    </div>
-                    <div>
-                      <a href="../{{book[1].txt_src|urlencode}}" target="_blank">читать</a>
-                    </div>
+                    <h5 class="card-text"><a href="../{{book[1].txt_src|urlencode}}" target="_blank">читать</a></h5>
                     <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                   </div>
                 </div>
