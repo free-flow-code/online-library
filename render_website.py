@@ -8,7 +8,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Скрипт для запуска сайта онлайн-библиотеки.')
-    parser.add_argument('--json-folder', help='путь к файлу с данными книг', type=str, nargs='?', default='.')
+    parser.add_argument('--json-path', help='путь к файлу с данными книг', type=str, nargs='?', default='books_data.json')
     return parser.parse_args()
 
 
@@ -20,11 +20,15 @@ def on_reload():
     template = env.get_template('template.html')
 
     args = parse_arguments()
-    json_folder = args.json_folder
+    json_path = args.json_path
     books_per_page = 10
 
-    with open(os.path.join(json_folder, 'books_data.json'), encoding='utf8') as json_file:
-        books_in_page = list(chunked(json.load(json_file), books_per_page))
+    try:
+        with open(json_path, encoding='utf8') as json_file:
+            books_in_page = list(chunked(json.load(json_file), books_per_page))
+    except FileNotFoundError:
+        print('Файл с данными не найден. укажите путь к json-файлу.')
+        exit()
 
     os.makedirs('pages', exist_ok=True)
     books_per_row = 2
