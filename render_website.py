@@ -27,7 +27,7 @@ def on_reload():
         with open(json_path, encoding='utf8') as json_file:
             books_in_page = list(chunked(json.load(json_file), books_per_page))
     except FileNotFoundError:
-        print('Файл с данными не найден. укажите путь к json-файлу.')
+        print('Файл с данными не найден. Укажите путь к json-файлу.')
         exit()
 
     os.makedirs('pages', exist_ok=True)
